@@ -6,8 +6,8 @@ services:
     container_name: monitoring_prometheus
     restart: unless-stopped
     volumes:
-      - ./grafanaStack/data/prometheus/config:/etc/prometheus/
-      - ./grafanaStack/data/prometheus/data:/prometheus
+      - ./data/prometheus/config:/etc/prometheus/
+      - ./data/prometheus/data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -41,7 +41,7 @@ services:
     devices:
       - /dev/kmsg
     expose:
-      - 8081
+      - 8080
     networks:
       - pi
 
@@ -49,11 +49,10 @@ services:
     image: grafana/grafana:latest
     container_name: monitoring_grafana
     restart: unless-stopped
-    user: "0"
     links:
       - prometheus:prometheus
     volumes:
-      - ./grafanaStack/data/grafana:/var/lib/grafana
+      - ./data/grafana:/var/lib/grafana
     environment:
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SERVER_DOMAIN=localhost
@@ -66,7 +65,7 @@ services:
       - 'traefik.frontend.headers.customRequestHeaders=Authorization:-'
     networks:
       - pi
-  
+
 networks:
   pi:
     external: true
